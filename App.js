@@ -1,21 +1,22 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View,Animated } from 'react-native';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import Ball from "./src/Ball";
 
 export default function App() {
   return (
-  <View
-  styles={styles.ball}
-  />
+    <View style={styles.container}>
+      <Ball />
+
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-ball:{
-  height:60,
-  width:60,
-  borderRadius:30,
-  borderWidth:30,
-  borderColor:'black'
-}
+  container: {
+    flex: 1,
+    padding:40
+    // backgroundColor:'#000',
+    // alignItems: 'center',
+    // justifyContent: 'center'
+  },
 });
