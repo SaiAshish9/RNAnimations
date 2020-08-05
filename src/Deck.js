@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { View, Animated, PanResponder, Dimensions } from "react-native";
 
-const Deck = ({ data, renderCard }) => {
+const Deck = ({ data, renderCard, ...props }) => {
   const SCREEN_WIDTH = Dimensions.get("window").width;
   const SWIPE_THRESHOLD = 0.1 * SCREEN_WIDTH;
   const SWIPE_OUT_DURATION = 250;
@@ -37,7 +37,12 @@ const Deck = ({ data, renderCard }) => {
       },
       duration: SWIPE_OUT_DURATION,
       useNativeDriver: false,
-    }).start();
+    }).start(() => onSwipeComplete(direction));
+  };
+
+  const onSwipeComplete = (direction) => {
+    const { onSwipeLeft, onSwipeRight } = props;
+    direction === "right" ? onSwipeRight() : onSwipeLeft();
   };
 
   const resetPosition = () => {
