@@ -1,82 +1,74 @@
-import React from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
-import Deck from "./src/Deck";
-import { Card, Button} from "react-native-elements";
+import React,{useRef} from "react";
+import { StyleSheet, Image, View, Animated } from "react-native";
 
-export default function App() {
-  const DATA = [
-    {
-      id: 1,
-      text: "Card #1",
-      uri: "http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-04.jpg",
-    },
-    {
-      id: 2,
-      text: "Card #2",
-      uri: "http://www.fluxdigital.co/wp-content/uploads/2015/04/Unsplash.jpg",
-    },
-    {
-      id: 3,
-      text: "Card #3",
-      uri: "http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-09.jpg",
-    },
-    {
-      id: 4,
-      text: "Card #4",
-      uri: "http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-01.jpg",
-    },
-    {
-      id: 5,
-      text: "Card #5",
-      uri: "http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-04.jpg",
-    },
-    {
-      id: 6,
-      text: "Card #6",
-      uri: "http://www.fluxdigital.co/wp-content/uploads/2015/04/Unsplash.jpg",
-    },
-    {
-      id: 7,
-      text: "Card #7",
-      uri: "http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-09.jpg",
-    },
-    {
-      id: 8,
-      text: "Card #8",
-      uri: "http://imgs.abduzeedo.com/files/paul0v2/unsplash/unsplash-01.jpg",
-    },
-  ];
+const ImageLoader =(props)=> {
+  const opacity=useRef(new Animated.Value(0)).current
 
-  const renderCard = (item) => {
-    return (
-      <Card 
-      key={item.id}
-      title={item.text} image={{ uri: item.uri }}>
-        <Text>Card</Text>
-        <Button
-          icon={{ name: "code",color:'#fff' }}
-          backgroundColor="#03A9F4"
-          title="View Now!"
-        />
-      </Card>
-    );
+const  onLoad = () => {
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
   };
 
-  return (
-    <View style={styles.container}>
-      {/* <Ball /> */}
-      <ScrollView
-      showsVerticalScrollIndicator={false}
-      >
-        <Deck data={DATA} renderCard={renderCard} />
-      </ScrollView>
-    </View>
-  );
+
+    return (
+      <>
+        <Animated.Image
+          onLoad={onLoad}
+          {...props}
+          style={[
+            {
+              opacity: opacity,
+              transform: [
+                {
+                  scale: opacity.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0.85, 1],
+                  }),
+                },
+              ],
+            },
+            props.style,
+          ]}
+        ></Animated.Image>
+        <Animated.View
+          onLoad={onLoad}
+          style={{
+            height: 100,
+            width: 100,
+            backgroundColor: opacity.interpolate({
+              inputRange: [0, 1],
+              outputRange: ["#000", "#444"],
+            }),
+          }}
+        ></Animated.View>
+      </>
+    );
 }
+
+const App = () => (
+  <View style={styles.container}>
+    <ImageLoader
+      source={{
+        uri:
+          "https://images.unsplash.com/photo-1596704303384-3004d13b6502?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+      }}
+      style={{
+        height: 300,
+        width: 300,
+      }}
+    />
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 40,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
+
+export default App;
